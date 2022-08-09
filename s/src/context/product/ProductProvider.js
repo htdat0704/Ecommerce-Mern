@@ -10,9 +10,22 @@ import {
 function ProductProvider({ children }) {
   const [productState, dispatch] = useReducer(productReducer, productInit);
 
-  const getProducts = async () => {
+  const getProducts = async (
+    page = 1,
+    price = [0, 25000],
+    category,
+    ratings = 0,
+    keyword = ""
+  ) => {
     try {
-      const response = await axios.get(`http://localhost:4000/product`);
+      let link = `http://localhost:4000/product?page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}&name=${keyword}`;
+
+      if (category) {
+        link = `http://localhost:4000/product?page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}&name=${keyword}&category=${category}`;
+      }
+
+      const response = await axios.get(link);
+
       if (response.data.success) {
         dispatch(getProductSuccess(response.data));
       }

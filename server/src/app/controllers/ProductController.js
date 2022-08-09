@@ -15,17 +15,33 @@ class ProductController {
       }
    };
 
-   getAllProduct = async (req, res) => {
+   getAllProduct = async (req, res, next) => {
       try {
          const resultPerPage = 8;
          const productCount = await Product.countDocuments();
-         const apiFeatures = new ApiFeatures(Product.find().lean(), req.query)
+         const apiFeaturesFilter = new ApiFeatures(Product.find(), req.query)
+            .searchByName()
+            .filter();
+
+         let products = await apiFeaturesFilter.query;
+         let filterCountProducts = products.length;
+
+         const apiFeaturesFilterPaginagtion = new ApiFeatures(
+            Product.find(),
+            req.query,
+         )
             .searchByName()
             .filter()
             .pagination(resultPerPage);
-         const products = await apiFeatures.query;
 
-         res.json({ success: true, products, productCount });
+         products = await apiFeaturesFilterPaginagtion.query;
+
+         res.json({
+            success: true,
+            products,
+            productCount,
+            filterCountProducts,
+         });
       } catch (e) {
          return next(new ErrorHander(e, 400));
       }

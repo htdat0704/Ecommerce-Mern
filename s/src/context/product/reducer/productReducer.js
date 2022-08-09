@@ -9,6 +9,7 @@ export const productInit = {
   product: null,
   productsCount: 0,
   resultPerPage: 8,
+  filterCountProducts: 0,
 };
 
 export const productReducer = (state, action) => {
@@ -19,6 +20,7 @@ export const productReducer = (state, action) => {
         ...state,
         products: payload.products,
         productsCount: payload.productCount,
+        filterCountProducts: payload.filterCountProducts,
       };
     case GET_PRODUCTS_FAIL:
       return {

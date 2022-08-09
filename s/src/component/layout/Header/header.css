@@ -5,14 +5,21 @@
   box-sizing: border-box;
 }
 html {
-  font-size: 62.5%;
+  font-size: 80%;
 }
 body {
   font-size: 1.6rem;
 }
 li {
+  font-size: 1.6rem;
   list-style: none;
 }
+
+.dropdown-menu .dropdown-item {
+  font-size: 1.6rem;
+  list-style: none;
+}
+
 a {
   text-decoration: none;
   color: rgb(255, 255, 255);

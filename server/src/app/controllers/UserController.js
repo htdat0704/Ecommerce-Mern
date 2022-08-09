@@ -1,5 +1,6 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
+const cloundinary = require('cloudinary');
 
 const User = require('../model/User');
 const ErrorHander = require('../../utils/errorhander');
@@ -9,6 +10,12 @@ const sendEmail = require('../../utils/sendEmail');
 class UserController {
    register = async (req, res, next) => {
       try {
+         const myCloud = await cloundinary.v2.uploader.upload(req.body.avatar, {
+            folder: 'avatars',
+            width: 150,
+            crop: 'scale',
+         });
+
          const { name, email, password } = req.body;
 
          const userFind = await User.findOne({ email: email });
@@ -24,8 +31,8 @@ class UserController {
             email,
             password: hashedPassword,
             avatar: {
-               public_id: 'This is sample',
-               url: 'profile icon',
+               public_id: myCloud.public_id,
+               url: myCloud.secure_url,
             },
          });
 
@@ -50,11 +57,13 @@ class UserController {
          const userFind = await User.findOne({ email: email }).select(
             '+password',
          );
+
          if (!userFind) {
             return next(new ErrorHander('User not Found', 402));
          }
 
          const passwordValid = await argon2.verify(userFind.password, password);
+
          if (!passwordValid) {
             return next(new ErrorHander('Password not Right', 402));
          }
@@ -216,9 +225,35 @@ class UserController {
 
    updateProfile = async (req, res, next) => {
       try {
-         let user = await User.findOneAndUpdate(req.user._id, req.body, {
-            new: true,
-         });
+         const updateUser = {
+            name: req.body.name,
+            email: req.body.email,
+         };
+
+         if (req.body.avatar !== '') {
+            await cloundinary.v2.uploader.destroy(req.user.avatar.public_id);
+            const myCloud = await cloundinary.v2.uploader.upload(
+               req.body.avatar,
+               {
+                  folder: 'avatars',
+                  width: 150,
+                  crop: 'scale',
+               },
+            );
+
+            updateUser.avatar = {
+               public_id: myCloud.public_id,
+               url: myCloud.secure_url,
+            };
+         }
+
+         let user = await User.findOneAndUpdate(
+            { _id: req.user._id },
+            updateUser,
+            {
+               new: true,
+            },
+         );
 
          res.json({ success: true, user });
       } catch (e) {
