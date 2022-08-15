@@ -1,0 +1,59 @@
+.sidebar {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 0;
+}
+
+.sidebar > a > img {
+  width: 100%;
+  transition: all 0.5s;
+}
+
+.sidebar > a > img:hover {
+  filter: drop-shadow(0 0 10px tomato);
+}
+
+.treeHeading {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.493);
+  transition: all 0.5s;
+  padding-left: 4rem;
+}
+
+.sidebar > ul > li > a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.493);
+  padding: 1rem;
+  transition: all 0.5s;
+}
+
+k-treeview-leaf-text:hover {
+  color: tomato;
+  transform: scale(1.1);
+}
+.sidebar a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.493);
+  font: 200 1rem "Roboto";
+  padding: 4rem;
+  transition: all 0.5s;
+}
+.sidebar a:hover {
+  color: tomato;
+  transform: scale(1.1);
+}
+
+.sidebar a > P {
+  display: flex;
+  align-items: center;
+}
+.sidebar a > p > .svgIMG {
+  margin-right: 0.5rem;
+}
+
+.MuiTypography-root {
+  background-color: #fff !important;
+}

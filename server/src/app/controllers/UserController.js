@@ -97,7 +97,7 @@ class UserController {
    forgetPassword = async (req, res, next) => {
       const { email } = req.body;
       const random = Math.floor(Math.random() * 100000000000000000);
-      const requestPasswordUrl = `http://localhost:4000/auth/password/reset/${random}`;
+      const requestPasswordUrl = `http://localhost:3000/password/reset/${random}`;
 
       const message = `Your password reset token is :- \n\n ${requestPasswordUrl} \n\n If you have not requested this email then, please ignore it`;
 
@@ -134,7 +134,7 @@ class UserController {
    resetPassword = async (req, res, next) => {
       const { password, confirmPassword } = req.body;
       const tokenReset = req.params.token;
-      console.log(tokenReset);
+
       if (!tokenReset) {
          return next(new ErrorHander('No token found', 404));
       }
@@ -163,7 +163,7 @@ class UserController {
          );
          res.json({
             success: true,
-            message: 'Update Password complete',
+            message: 'Update password success',
          });
       } catch (e) {
          return next(new ErrorHander(e, 401));
@@ -184,16 +184,14 @@ class UserController {
    };
 
    updatePassword = async (req, res, next) => {
-      const { password, confirmPassword, oldPassword } = req.body;
+      const { newPassword, confirmPassword, oldPassword } = req.body;
 
-      if (password !== confirmPassword) {
+      if (newPassword !== confirmPassword) {
          return next(new ErrorHander('Password not match', 403));
       }
 
       try {
-         let user = await User.findById(req.user._id)
-            .select('+password')
-            .lean();
+         let user = await User.findById(req.user._id).select('+password');
 
          const passwordValid = await argon2.verify(user.password, oldPassword);
 
@@ -201,7 +199,7 @@ class UserController {
             return next(new ErrorHander('Old password is not match', 404));
          }
 
-         const hashedPassword = await argon2.hash(password);
+         const hashedPassword = await argon2.hash(newPassword);
 
          user = await User.findOneAndUpdate(
             { _id: req.user._id },
@@ -211,13 +209,7 @@ class UserController {
             { new: true },
          );
 
-         const accessToken = jwt.sign(
-            { userId: user._id },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: process.env.JWT_EXPIRE },
-         );
-
-         sendToken(user, accessToken, res);
+         res.json({ success: true, user });
       } catch (e) {
          return next(new ErrorHander(e, 401));
       }

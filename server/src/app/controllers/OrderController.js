@@ -46,15 +46,18 @@ class OrderController {
 
    getSingleOrder = async (req, res, next) => {
       try {
-         const orders = await Order.findById(req.params.id);
+         const order = await Order.findById(req.params.id).populate(
+            'user',
+            'name email',
+         );
 
-         if (!orders) {
+         if (!order) {
             return next(new ErrorHander('Order not Found', 400));
          }
 
          res.json({
             success: true,
-            orders,
+            order,
          });
       } catch (e) {
          return next(new ErrorHander(e, 400));

@@ -26,11 +26,15 @@ const orderSchema = new mongoose.Schema({
             ref: 'Product',
             required: true,
          },
+         image: {
+            type: String,
+            required: true,
+         },
       },
    ],
    user: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: 'users',
       required: true,
    },
    itemsPrice: {
