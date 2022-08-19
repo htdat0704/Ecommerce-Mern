@@ -8,6 +8,12 @@ import {
   getMyOrdersSuccess,
   getMyOrdersFail,
   getOneOrderSuccess,
+  getAllOrdersSuccess,
+  getAllOrdersFail,
+  deleteOrderSuccess,
+  deleteOrderFail,
+  updateOrderSuccess,
+  updateOrderFail,
 } from "./reducer/orderAction";
 import setAuthToken from "../../utils/setAuthToken";
 
@@ -69,11 +75,71 @@ function OrderProvider({ children }) {
     }
   };
 
+  //admin
+
+  const getAllOrders = async (keyword = "") => {
+    if (localStorage["auth-token"]) {
+      setAuthToken(localStorage["auth-token"]);
+    }
+    let link;
+    link = "http://localhost:4000/order/admin";
+    if (keyword) {
+      link = `http://localhost:4000/order/admin?username=${keyword}`;
+    }
+    try {
+      const response = await axios.get(link);
+
+      if (response.data.success)
+        dispatch(getAllOrdersSuccess(response.data.orders));
+    } catch (error) {
+      dispatch(getAllOrdersFail(error.response.data.message));
+    }
+  };
+
+  const deleteOrder = async (id) => {
+    if (localStorage["auth-token"]) {
+      setAuthToken(localStorage["auth-token"]);
+    }
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/order/admin/delete/${id}`
+      );
+
+      if (response.data.success) dispatch(deleteOrderSuccess(id));
+    } catch (error) {
+      dispatch(deleteOrderFail(error.response.data.message));
+    }
+  };
+
+  const updateOrder = async (idOrder, formStatus) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await axios.put(
+        `http://localhost:4000/order/admin/updateStatus/${idOrder}`,
+        formStatus,
+        config
+      );
+      if (response.data.success) {
+        dispatch(updateOrderSuccess({ idOrder, formStatus }));
+      }
+    } catch (error) {
+      dispatch(updateOrderFail(error.response.data.message));
+    }
+  };
+
   const orderContext = {
     createOrder,
     orderState,
     getMyOrders,
     getOneOrder,
+    getAllOrders,
+    deleteOrder,
+    updateOrder,
   };
 
   return (

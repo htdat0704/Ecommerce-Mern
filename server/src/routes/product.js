@@ -19,6 +19,14 @@ router.put(
    authorizeRole('admin'),
    ProductController.updateProduct,
 );
+
+router.delete(
+   '/delete/review',
+   isAuthenticatedUser,
+   authorizeRole('admin'),
+   ProductController.deleteReview,
+);
+
 router.delete(
    '/delete/:id',
    isAuthenticatedUser,
@@ -33,14 +41,27 @@ router.put(
    ProductController.createProductReview,
 );
 
-router.get('/reviews', ProductController.getProductReview);
-router.delete('/reviews', isAuthenticatedUser, ProductController.deleteReview);
+// router.get('/reviews', ProductController.getProductReview);
 
 router.get(
-   '/admin/reviews/:id',
+   '/admin/products',
+   isAuthenticatedUser,
+   authorizeRole('admin'),
+   ProductController.getAllProductsAdmin,
+);
+
+router.get(
+   '/admin/review/:keyword',
    isAuthenticatedUser,
    authorizeRole('admin'),
    ProductController.getProductReview,
+);
+
+router.get(
+   '/admin/reviews',
+   isAuthenticatedUser,
+   authorizeRole('admin'),
+   ProductController.getAllReview,
 );
 
 router.get('/', ProductController.getAllProduct);

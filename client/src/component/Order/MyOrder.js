@@ -14,11 +14,11 @@ const formatterStatus = (value) => {
       bg={
         value === "Done"
           ? "success"
-          : value === "Delivered"
+          : value === "Shipping"
           ? "warning"
           : value === "Processing"
           ? "primary"
-          : "Danger"
+          : "danger"
       }
     >
       {value}
@@ -44,13 +44,12 @@ const MyOrders = () => {
   } = useContext(OrderContext);
 
   const columns = [
-    { key: "id", name: "Order ID", minWidth: 300, flex: 1 },
+    { key: "stt", name: "STT" },
 
     {
       key: "status",
       name: "Status",
-      minWidth: 150,
-      flex: 0.5,
+
       formatter: (value) => {
         return formatterStatus(value.row.status);
       },
@@ -59,23 +58,17 @@ const MyOrders = () => {
       key: "itemsQty",
       name: "Items Qty",
       type: "number",
-      minWidth: 150,
-      flex: 0.3,
     },
 
     {
       key: "amount",
       name: "Amount",
       type: "number",
-      minWidth: 270,
-      flex: 0.5,
     },
 
     {
       key: "actions",
-      flex: 0.3,
       name: "Actions",
-      minWidth: 150,
       type: "number",
       sortable: false,
       formatter: (value) => {
@@ -84,15 +77,17 @@ const MyOrders = () => {
     },
   ];
   const rows = [];
-
+  let STT = 1;
   orders &&
     orders.forEach((item, index) => {
       rows.push({
         itemsQty: item.orderItems.length,
         id: item._id,
+        stt: STT,
         status: item.orderStatus,
         amount: item.totalPrice,
       });
+      STT++;
     });
 
   useEffect(() => {
@@ -101,8 +96,9 @@ const MyOrders = () => {
 
   return (
     <Fragment>
-      (
       <div className="myOrdersPage">
+        <h2 id="myOrdersHeading">{user.name}'s Orders</h2>
+
         <DataGrid
           rows={rows}
           columns={columns}
@@ -111,10 +107,7 @@ const MyOrders = () => {
           className="myOrdersTable"
           autoHeight
         />
-
-        <h2 id="myOrdersHeading">{user.name}'s Orders</h2>
       </div>
-      )
     </Fragment>
   );
 };

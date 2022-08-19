@@ -6,7 +6,7 @@ import ProductCard from "../Home/ProductCard";
 import Pagination from "react-js-pagination";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import Search from "./Search";
+import "./Search.css";
 
 const { createSliderWithTooltip } = Slider;
 const Range = createSliderWithTooltip(Slider.Range);
@@ -44,7 +44,6 @@ function Products() {
   useEffect(() => {
     const timer = setTimeout(async () => {
       await getProducts(currentPage, price, category, ratings, keyword);
-      setKeyword("");
       setLoading(false);
     }, 2000);
     return () => clearTimeout(timer);
@@ -52,16 +51,10 @@ function Products() {
 
   const setCurrentPageNo = (e) => {
     setCurrentPage(e);
-    setLoading(true);
   };
 
   const priceHandler = (newPrice) => {
     setPrice(newPrice);
-  };
-
-  const searchHandle = (keyword) => {
-    setKeyword(keyword);
-    setLoading(true);
   };
 
   if (isLoading) {
@@ -70,7 +63,15 @@ function Products() {
     body = (
       <>
         <h2 className="productsHeading">Products</h2>
-        <Search searchHandle={searchHandle} />
+        <form className="searchBox">
+          <input
+            type="text"
+            name="keyword"
+            placeholder="Search a Product ..."
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <input type="submit" value="Search" />
+        </form>
 
         <div className="products">
           {products &&

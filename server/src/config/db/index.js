@@ -1,15 +1,20 @@
 const mongo = require('mongoose');
 
 async function connect() {
-  try {
-    await mongo.connect('mongodb://localhost:27017/Ecommerce', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('Connection Succes!!!');
-  } catch (error) {
-    console.log('Connection Failed!!!');
-  }
+   try {
+      await mongo.connect(
+         'mongodb+srv://durand:123123123@cluster0.llxjqcl.mongodb.net/ecomerce?retryWrites=true&w=majority',
+         {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+         },
+      );
+      console.log('Connection Succes!!!');
+   } catch (error) {
+      console.log('Connection Failed!!!');
+   }
 }
 
 module.exports = { connect };
+
+// mongodb+srv://durand:<password>@cluster0.llxjqcl.mongodb.net/?retryWrites=true&w=majority

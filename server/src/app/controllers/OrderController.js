@@ -1,6 +1,7 @@
 const Order = require('../model/Order');
 const Product = require('../model/Product');
 const ErrorHander = require('../../utils/errorhander');
+const User = require('../model/User');
 
 class OrderController {
    newOrder = async (req, res, next) => {
@@ -65,18 +66,38 @@ class OrderController {
    };
 
    getAllOrder = async (req, res, next) => {
+      let orders;
+      let AllOrders = [];
       try {
-         const orders = await Order.find({}).lean();
+         orders = await Order.find({}).populate('user', 'name');
+         if (req.query.username) {
+            const users = await User.find({
+               name: {
+                  $regex: req.query.username,
+                  $options: 'i',
+               },
+            }).lean();
+
+            orders.forEach(order => {
+               users.forEach(user => {
+                  if (order.user._id.toString() === user._id.toString()) {
+                     AllOrders.push(order);
+                  }
+               });
+            });
+         } else {
+            AllOrders = await Order.find({}).populate('user', 'name');
+         }
 
          let totalAmount = 0;
 
-         orders.forEach(order => {
+         AllOrders.forEach(order => {
             totalAmount += order.totalPrice;
          });
 
          res.json({
             success: true,
-            orders,
+            orders: AllOrders,
             totalAmount,
          });
       } catch (e) {

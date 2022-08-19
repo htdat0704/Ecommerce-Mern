@@ -138,16 +138,31 @@
   transform: scale(1.1);
 }
 
+.submitTitle {
+  color: #000000be;
+  font: 500 1.4vmax "Roboto";
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.226);
+  margin: auto;
+  width: 20vmax;
+}
+
+.react-stars {
+  margin: auto;
+}
 .submitDialog {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin: auto;
 }
 .submitDialogTextArea {
   border: 1px solid rgba(0, 0, 0, 0.082);
   margin: 1vmax 0;
   outline: none;
   padding: 1rem;
-  font: 300 1rem "Roboto";
+  width: max-content;
+  border: 2px solid orange;
 }
 
 .reviewsHeading {

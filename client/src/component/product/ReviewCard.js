@@ -4,7 +4,6 @@ import profilePng from "../../assets/Profile.png";
 
 const ReviewCard = ({ review }) => {
   const options = {
-    value: review.rating,
     precision: 0.5,
     isHalf: true,
     size: 20,
@@ -15,7 +14,7 @@ const ReviewCard = ({ review }) => {
     <div className="reviewCard">
       <img src={profilePng} alt="User" />
       <p>{review.name}</p>
-      <ReactStars {...options} />
+      <ReactStars value={review.rating} {...options} />
       <span className="reviewCardComment">{review.comment}</span>
     </div>
   );

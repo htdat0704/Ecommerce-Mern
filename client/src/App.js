@@ -22,6 +22,14 @@ import OrderSuccess from "./component/Cart/OrderSuccess";
 import MyOrders from "./component/Order/MyOrder";
 import OrderDetails from "./component/Order/OrderDetails";
 import DashBoard from "./component/Admin/DashBoard";
+import ProductList from "./component/Admin/ProductList";
+import NewProduct from "./component/Admin/NewProduct";
+import UpdateProduct from "./component/Admin/UpdateProduct";
+import OrderList from "./component/Admin/OrderList";
+import OrderProcess from "./component/Admin/OrderProcess";
+import UserList from "./component/Admin/UserList";
+import UpdateUser from "./component/Admin/UpdateUser";
+import ReviewList from "./component/Admin/ReviewList";
 
 function App() {
   const {
@@ -46,7 +54,6 @@ function App() {
         <Route extact path="/product/:id" element={<ProductDetails />} />
         <Route extact path="/products" element={<Products />} />
         <Route extact path="/login" element={<Auth />} />
-        <Route extact path="/profile" element={<Profile />} />
         <Route extact path="/cart" element={<Cart />} />
         <Route extact path="/password/forgot" element={<ForgotPassword />} />
         <Route
@@ -55,9 +62,17 @@ function App() {
           element={<ResetPassword />}
         />
         <Route
+          path="/profile"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/updateProfile"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <UpdateProfile />
             </ProtectedRoute>
           }
@@ -65,7 +80,7 @@ function App() {
         <Route
           path="/password/update"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <UpdatePassword />
             </ProtectedRoute>
           }
@@ -73,7 +88,7 @@ function App() {
         <Route
           path="/password/update"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <UpdatePassword />
             </ProtectedRoute>
           }
@@ -82,7 +97,7 @@ function App() {
           extact
           path="/shipping"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <Shipping />
             </ProtectedRoute>
           }
@@ -91,7 +106,7 @@ function App() {
           extact
           path="/confirmOrder"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <ConfirmOrder />
             </ProtectedRoute>
           }
@@ -100,7 +115,7 @@ function App() {
           extact
           path="/orderSuccess"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <OrderSuccess />
             </ProtectedRoute>
           }
@@ -109,7 +124,7 @@ function App() {
           extact
           path="/orders"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <MyOrders />
             </ProtectedRoute>
           }
@@ -118,12 +133,110 @@ function App() {
           extact
           path="/order/:orderId"
           element={
-            <ProtectedRoute user={isAuthenticated} role={user.role}>
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
               <OrderDetails />
             </ProtectedRoute>
           }
         />
-        <Route extact path="/admin/dashboard" element={<DashBoard />} />
+        <Route
+          extact
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <DashBoard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/products"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <ProductList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/products/new"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <NewProduct />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/product/:productId"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <UpdateProduct />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/orders"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <OrderList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/order/:orderId"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <OrderProcess />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/users"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <UserList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/user/:userId"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <UpdateUser />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/reviews"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <ReviewList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          extact
+          path="/admin/review/:reviewId"
+          element={
+            <ProtectedRoute user={isAuthenticated} role={user ? user.role : ""}>
+              <ReviewList />
+            </ProtectedRoute>
+          }
+        />
         <Route extact path="/" element={<Home />} />
       </Routes>
       <Footer></Footer>

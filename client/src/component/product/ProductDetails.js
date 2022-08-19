@@ -17,8 +17,8 @@ const ProductDetails = () => {
   let { id } = useParams();
   const [isLoading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openCartModel, setOpenCartModel] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const {
@@ -32,13 +32,6 @@ const ProductDetails = () => {
   } = useContext(AuthContext);
 
   let body;
-
-  const loadingShow = () => {
-    setLoadingSubmit(true);
-    setTimeout(() => {
-      setLoadingSubmit(false);
-    }, 2000);
-  };
 
   const increaseQuantity = () => {
     if (product.Stock <= quantity) return;
@@ -55,8 +48,8 @@ const ProductDetails = () => {
   };
 
   const addToCartHandler = () => {
-    loadingShow();
     addItemsToCart(id, quantity);
+    openCartModel ? setOpenCartModel(false) : setOpenCartModel(true);
   };
 
   const reviewSubmitHandler = () => {
@@ -67,6 +60,8 @@ const ProductDetails = () => {
     };
 
     createNewReviews(myForm);
+    setComment("");
+    setRating(0);
     setOpen(false);
   };
 
@@ -75,6 +70,14 @@ const ProductDetails = () => {
       navigate("/login", { replace: true });
     }
     open ? setOpen(false) : setOpen(true);
+  };
+
+  const cartSubmitHandler = () => {
+    navigate("/cart", { replace: true });
+  };
+
+  const cartReviewToggle = () => {
+    openCartModel ? setOpenCartModel(false) : setOpenCartModel(true);
   };
 
   useEffect(() => {
@@ -90,7 +93,7 @@ const ProductDetails = () => {
   } else {
     const options = {
       size: 20,
-      value: Number(product.ratings),
+      value: +product.ratings,
       edit: false,
       precision: 0.5,
     };
@@ -162,14 +165,14 @@ const ProductDetails = () => {
           onClose={submitReviewToggle}
         >
           {" "}
-          <Modal.Title>Submit Review</Modal.Title>
-          <Modal.Body>
+          <Modal.Title className="submitTitle">Submit Review</Modal.Title>
+          <Modal.Body className="submitDialog">
             <ReactStars
               onChange={(e) => setRating(e)}
               value={rating}
               precision={0.5}
               isHalf={true}
-              size={20}
+              size={30}
             />
             <textarea
               className="submitDialogTextArea"
@@ -188,6 +191,30 @@ const ProductDetails = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+
+        <Modal
+          aria-labelledby="simple-dialog-title"
+          show={openCartModel}
+          onClose={cartReviewToggle}
+        >
+          {" "}
+          <Modal.Title className="submitTitle">Add to Cart Success</Modal.Title>
+          <Modal.Body className="submitDialog">
+            <span className="submitDialogTextArea">
+              <p>Product Name: {product.name || ""}</p>
+              <p>Quantity: {quantity}</p>
+              <p>Price: {product.price * quantity || 0}</p>
+            </span>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={cartReviewToggle} variant="secondary">
+              Cancel
+            </Button>
+            <Button onClick={cartSubmitHandler} variant="primary">
+              Go to Cart
+            </Button>
+          </Modal.Footer>
+        </Modal>
         {product.reviews && product.reviews[0] ? (
           <div className="reviews">
             {product.reviews &&
@@ -202,12 +229,7 @@ const ProductDetails = () => {
     );
   }
 
-  return (
-    <>
-      {body}
-      <LoadingModal show={loadingSubmit} />
-    </>
-  );
+  return <>{body}</>;
 };
 
 export default ProductDetails;

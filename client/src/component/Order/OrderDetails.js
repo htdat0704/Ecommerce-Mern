@@ -24,7 +24,7 @@ const OrderDetails = () => {
     }, 2000);
     return () => clearTimeout(timer);
   }, [orderId]);
-  console.log(order);
+
   return (
     <Fragment>
       <LoadingModal show={isLoading} />
@@ -56,11 +56,11 @@ const OrderDetails = () => {
                 bg={
                   order.orderStatus === "Done"
                     ? "success"
-                    : order.orderStatus === "Delivered"
+                    : order.orderStatus === "Shipping"
                     ? "warning"
                     : order.orderStatus === "Processing"
                     ? "primary"
-                    : "Danger"
+                    : "danger"
                 }
               >
                 {order.orderStatus && order.orderStatus}

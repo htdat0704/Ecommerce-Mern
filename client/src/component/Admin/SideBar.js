@@ -1,40 +1,15 @@
 import React from "react";
 import "./SideBar.css";
-import logo from "../../assets/logo.svg";
+
 import { Link } from "react-router-dom";
 
-import PostAddIcon from "../../assets/unlock-fill.svg";
-import AddIcon from "../../assets/unlock-fill.svg";
+import PostAddIcon from "../../assets/basket.svg";
+import AddIcon from "../../assets/plus.svg";
 
-import ListAltIcon from "../../assets/unlock-fill.svg";
-import DashboardIcon from "../../assets/unlock-fill.svg";
-import PeopleIcon from "../../assets/unlock-fill.svg";
-import RateReviewIcon from "../../assets/unlock-fill.svg";
-
-const tree = [
-  {
-    items: [
-      {
-        text: (
-          <Link to="/admin/products">
-            <p>
-              <img src={PostAddIcon} alt="Ecommerce" className="svgIMG" /> All
-            </p>
-          </Link>
-        ),
-      },
-      {
-        text: (
-          <Link to="/admin/products">
-            <p>
-              <img src={AddIcon} alt="Ecommerce" className="svgIMG" /> Create
-            </p>
-          </Link>
-        ),
-      },
-    ],
-  },
-];
+import ListAltIcon from "../../assets/list-ul.svg";
+import DashboardIcon from "../../assets/kanban.svg";
+import PeopleIcon from "../../assets/person-circle.svg";
+import RateReviewIcon from "../../assets/chat-square-text.svg";
 
 const Sidebar = () => {
   return (
@@ -55,7 +30,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/admin/products">
+          <Link to="/admin/products/new">
             <p>
               <img src={AddIcon} alt="Ecommerce" className="svgIMG" /> Create
             </p>

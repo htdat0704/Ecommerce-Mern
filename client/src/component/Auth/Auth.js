@@ -29,7 +29,7 @@ const Auth = () => {
     email: "",
     password: "",
     name: "",
-    avatar: ImageCard,
+    avatar: "",
   });
 
   const registerDataChange = (e) => {

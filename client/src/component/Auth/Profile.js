@@ -7,17 +7,25 @@ import LoadingModal from "../Loading/loading";
 function Profile() {
   const {
     authState: { isAuthenticated, user },
+    loadUser,
   } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
-  const { loading, setLoading } = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  console.log(user);
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      await loadUser();
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       {loading ? (
-        <LoadingModal />
+        <LoadingModal show={loading} />
       ) : isAuthenticated ? (
         <>
           <div className="profileContainer">

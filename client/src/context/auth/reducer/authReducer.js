@@ -18,8 +18,10 @@ import {
 } from "./authAction";
 
 export const authInit = {
-  user: {},
-  isAuthenticated: false,
+  user: {
+    role: "user",
+  },
+  isAuthenticated: localStorage.getItem("auth-token") ? true : false,
   message: "",
 };
 

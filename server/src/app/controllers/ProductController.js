@@ -1,12 +1,34 @@
 const Product = require('../model/Product');
 const ErrorHander = require('../../utils/errorhander');
 const ApiFeatures = require('../../utils/apiFeatures');
+const cloundinary = require('cloudinary');
 
 class ProductController {
    createProduct = async (req, res, next) => {
-      req.body.user = req.user._id;
+      let images = [];
 
+      if (typeof req.body.images === 'String') {
+         images.push(req.body, images);
+      } else {
+         images = req.body.images;
+      }
       try {
+         const imagesLinks = [];
+
+         for (let i = 0; i < images.length; i++) {
+            const result = await cloundinary.v2.uploader.upload(images[i], {
+               folder: 'products',
+            });
+
+            imagesLinks.push({
+               public_id: result.public_id,
+               url: result.secure_url,
+            });
+         }
+
+         req.body.images = imagesLinks;
+         req.body.user = req.user._id;
+
          const product = await Product.create(req.body);
 
          res.json({ success: true, product });
@@ -47,7 +69,18 @@ class ProductController {
       }
    };
 
+   getAllProductsAdmin = async (req, res, next) => {
+      const products = await Product.find();
+
+      res.status(200).json({
+         success: true,
+         products,
+      });
+   };
+
    updateProduct = async (req, res, next) => {
+      let images = [];
+
       try {
          let product = await Product.findById(req.params.id);
 
@@ -55,9 +88,51 @@ class ProductController {
             return next(new ErrorHander('Product not found', 404));
          }
 
-         product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-         });
+         if (req.body.isUpdateImages) {
+            if (typeof req.body.images === 'String') {
+               images.push(req.body, images);
+            } else {
+               images = req.body.images;
+            }
+
+            for (let i = 0; i < product.images.length; i++) {
+               await cloundinary.v2.uploader.destroy(
+                  product.images[i].public_id,
+               );
+            }
+
+            const imagesLinks = [];
+
+            for (let i = 0; i < images.length; i++) {
+               const result = await cloundinary.v2.uploader.upload(images[i], {
+                  folder: 'products',
+               });
+
+               imagesLinks.push({
+                  public_id: result.public_id,
+                  url: result.secure_url,
+               });
+
+               req.body.images = imagesLinks;
+            }
+            product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+               new: true,
+            });
+         } else {
+            product = await Product.findByIdAndUpdate(
+               req.params.id,
+               {
+                  name: req.body.name,
+                  price: req.body.price,
+                  description: req.body.description,
+                  category: req.body.category,
+                  stock: req.body.stock,
+               },
+               {
+                  new: true,
+               },
+            );
+         }
 
          res.json({ success: true, product });
       } catch (e) {
@@ -71,6 +146,10 @@ class ProductController {
 
          if (!product) {
             return next(new ErrorHander('Product not found', 404));
+         }
+
+         for (let i = 0; i < product.images.length; i++) {
+            await cloundinary.v2.uploader.destroy(product.images[i].public_id);
          }
 
          await product.remove();
@@ -135,14 +214,50 @@ class ProductController {
 
    getProductReview = async (req, res, next) => {
       try {
-         const { productId } = req.body;
-         const productFind = await Product.findById(productId);
+         const keyword = req.params.keyword;
+         const products = await Product.find({
+            name: {
+               $regex: keyword,
+               $options: 'i',
+            },
+         }).lean();
 
-         if (!productFind) {
-            return next(new ErrorHander('Product not Found', 400));
+         let AllReviews = [];
+         products.map(product => {
+            product.reviews &&
+               product.reviews.map(rv => {
+                  rv.product_name = product.name;
+                  rv.product_id = product._id;
+                  AllReviews.push(rv);
+               });
+         });
+         // const { productId } = req.body;
+         // const productFind = await Product.findById(productId);
+
+         if (!products) {
+            res.json({ success: true, reviews: [], AllReviews });
          }
 
-         res.json({ success: true, reviews: productFind.reviews });
+         res.json({ success: true, reviews: AllReviews });
+      } catch (e) {
+         return next(new ErrorHander(e, 400));
+      }
+   };
+
+   getAllReview = async (req, res, next) => {
+      try {
+         const products = await Product.find().lean();
+         let AllReviews = [];
+         products.map(product => {
+            product.reviews &&
+               product.reviews.map(rv => {
+                  rv.product_name = product.name;
+                  rv.product_id = product._id;
+                  AllReviews.push(rv);
+               });
+         });
+
+         res.json({ success: true, reviews: AllReviews });
       } catch (e) {
          return next(new ErrorHander(e, 400));
       }
@@ -151,7 +266,8 @@ class ProductController {
    deleteReview = async (req, res, next) => {
       try {
          const { productId, id } = req.body;
-         const product = await Product.findById(productId);
+
+         const product = await Product.findById(productId).lean();
 
          if (!product) {
             return next(new ErrorHander('Product not Found', 400));
@@ -167,8 +283,11 @@ class ProductController {
             avg += rev.rating;
          });
 
-         const ratings = (avg / reviews.length).toFixed() || '0';
-         const numOfReviews = reviews.length;
+         const numOfReviews = reviews.length || 0;
+         let ratings = 0;
+         if (numOfReviews) {
+            ratings = (avg / reviews.length).toFixed();
+         }
 
          await Product.findByIdAndUpdate(
             productId,

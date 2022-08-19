@@ -35,7 +35,7 @@ const UpdateProfile = () => {
     setLoadingSubmit(true);
     setTimeout(() => {
       setLoadingSubmit(false);
-    }, 2500);
+    }, 2000);
   };
 
   const handleOnChangeUpdate = (e) =>
@@ -47,7 +47,12 @@ const UpdateProfile = () => {
     reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatarPreview(reader.result);
-        setFormUpdated({ ...formUpdated, avatar: reader.result });
+        setFormUpdated((prev) => {
+          return {
+            ...prev,
+            avatar: reader.result,
+          };
+        });
       }
     };
 

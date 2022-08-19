@@ -1,0 +1,96 @@
+.dashboardProduct {
+  width: 100vw;
+  max-width: 100%;
+  grid-template-columns: 1fr 5fr;
+  padding-top: 30px;
+  display: grid;
+}
+
+.productListContainer {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgb(255, 255, 255);
+  border-left: 1px solid rgba(0, 0, 0, 0.158);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#productListHeading {
+  font: 400 2rem "Roboto";
+  padding: 0.5vmax;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.637);
+  transition: all 0.5s;
+  margin: 2rem;
+  text-align: center;
+}
+
+.productListTable {
+  background-color: white;
+  border: none !important;
+  block-size: auto !important;
+}
+
+.productListTable div {
+  font: 300 1vmax "Roboto";
+  color: rgba(0, 0, 0, 0.678);
+  border: none !important;
+}
+
+.rdg-cell a,
+.rdg-cell button {
+  color: rgba(0, 0, 0, 0.527);
+  transition: all 0.5s;
+  border: none;
+  background-color: white;
+  text-align: center;
+  padding: 6px;
+}
+
+.rdg-cell a:hover {
+  background-color: tomato;
+}
+
+.rdg-cell div img {
+  height: 70px;
+  width: 100px;
+}
+
+.rdg-cell {
+  white-space: unset;
+  text-align: center;
+  padding: 10px 10px 10px 10px;
+}
+
+.rdg-cell button:hover {
+  background-color: rgb(236, 30, 30);
+}
+
+.MuiDataGrid-columnHeader div {
+  color: rgb(255, 255, 255);
+}
+
+@media screen and (max-width: 600px) {
+  .rdg-cell div img {
+    height: 30px;
+    width: 50px;
+  }
+  .productListTable div {
+    font: 200 3vw "Roboto";
+  }
+
+  .rdg-cell {
+    white-space: unset;
+  }
+
+  .rdg-header-row {
+    font: 200 1vw "Roboto";
+    color: red;
+  }
+
+  .dashboardProduct {
+    grid-template-columns: 1fr;
+    display: contents;
+  }
+}
