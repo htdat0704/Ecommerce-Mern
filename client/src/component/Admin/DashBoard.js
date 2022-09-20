@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useMemo } from "react";
 import Sidebar from "./SideBar.js";
 import "./dashboard.css";
 
@@ -31,14 +31,10 @@ const Dashboard = () => {
     getAllUsers,
   } = useContext(UserContext);
 
-  let outOfStock = 0;
+  //this will have the productAdmin.forEach run every re-render, if the list is large, it will impact quite seriously to the performance,
 
-  productsAdmin &&
-    productsAdmin.forEach((item) => {
-      if (item.stock === 0) {
-        outOfStock += 1;
-      }
-    });
+  const outOfStock = useMemo(() => productsAdmin ? productsAdmin
+    .reduce((prev, item) => item.stock === 0 ? prev + 1 : prev ) : 0, [productsAdmin]);
 
   useEffect(() => {
     const timer = setTimeout(async () => {

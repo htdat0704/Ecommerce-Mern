@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
+import Badge from "react-bootstrap/Badge";
 
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { OrderContext } from "../../context/order/OrderContext";
-import SideBar from "./SideBar";
-import Badge from "react-bootstrap/Badge";
 import AccountTreeIcon from "../../assets/bezier2.svg";
 import LoadingModal from "../Loading/loading";
+
+import SideBar from "./SideBar";
 import "./OrderProcess.css";
 
 const ProcessOrder = () => {
@@ -26,7 +27,8 @@ const ProcessOrder = () => {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [status, setStatus] = useState("");
 
-  let { orderId } = useParams();
+  // use const for variables not being reassigned
+  const { orderId } = useParams();
 
   useEffect(() => {
     const timer = setTimeout(async () => {

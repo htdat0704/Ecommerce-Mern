@@ -8,23 +8,16 @@ import DescriptionIcon from "../../assets/card-heading.svg";
 import StorageIcon from "../../assets/bag-heart.svg";
 import SpellcheckIcon from "../../assets/wordpress.svg";
 import AttachMoneyIcon from "../../assets/cash.svg";
+import { CATEGORIES } from '../../consts/category';
 
 import SideBar from "./SideBar";
+
 
 const NewProduct = () => {
   const { createProduct } = useContext(ProductContext);
   const [imagesPreview, setImagesPreview] = useState([]);
   const navigate = useNavigate();
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const categories = [
-    "Laptop",
-    "Footwear",
-    "Bottom",
-    "Tops",
-    "Attire",
-    "Camera",
-    "SmartPhones",
-  ];
 
   const loadingShow = () => {
     setLoadingSubmit(true);
@@ -144,7 +137,7 @@ const NewProduct = () => {
 
               <select onChange={handleOnChangeCreate} name="category">
                 <option value="">Choose Category</option>
-                {categories.map((cate) => (
+                {CATEGORIES.map((cate) => (
                   <option key={cate} value={cate}>
                     {cate}
                   </option>
