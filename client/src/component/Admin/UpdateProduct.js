@@ -1,14 +1,15 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
-import { ProductContext } from "../../context/product/ProductContext";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { ProductContext } from "../../context/product/ProductContext";
 import AccountTreeIcon from "../../assets/bezier2.svg";
 import DescriptionIcon from "../../assets/card-heading.svg";
 import StorageIcon from "../../assets/bag-heart.svg";
 import SpellcheckIcon from "../../assets/wordpress.svg";
 import AttachMoneyIcon from "../../assets/cash.svg";
-
 import LoadingModel from "../Loading/loading";
+import { CATEGORIES } from '../../consts/category';
+
 import SideBar from "./SideBar";
 
 const UpdateProduct = () => {
@@ -23,16 +24,6 @@ const UpdateProduct = () => {
 
   const [isLoading, setLoading] = useState(true);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-
-  const categories = [
-    "Laptop",
-    "Footwear",
-    "Bottom",
-    "Tops",
-    "Attire",
-    "Camera",
-    "SmartPhones",
-  ];
 
   const { productId } = useParams();
   const [formUpdate, setFormUpdate] = useState({
@@ -166,7 +157,7 @@ const UpdateProduct = () => {
                 onChange={handleOnChangeUpdate}
               >
                 <option value="">Choose Category</option>
-                {categories.map((cate) => (
+                {CATEGORIES.map((cate) => (
                   <option key={cate} value={cate}>
                     {cate}
                   </option>

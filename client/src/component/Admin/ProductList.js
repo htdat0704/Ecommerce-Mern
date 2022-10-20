@@ -1,14 +1,51 @@
 import React, { Fragment, useEffect, useContext, useState } from "react";
-import { ProductContext } from "../../context/product/ProductContext";
-import "./ProductList.css";
-import { Link } from "react-router-dom";
-import Sidebar from "./SideBar.js";
-
 import DataGrid from "react-data-grid";
+import { Link } from "react-router-dom";
+
+import { ProductContext } from "../../context/product/ProductContext";
 import EditIcon from "../../assets/pencil-fill.svg";
 import DeleteIcon from "../../assets/trash-fill.svg";
-
 import LoadingModel from "../Loading/loading";
+
+import Sidebar from "./SideBar.js";
+import "./ProductList.css";
+
+const columns = [
+  {
+    key: "name",
+    name: "Name",
+    formatter: (value) => {
+      return formatterName(value.row.name);
+    },
+  },
+  { key: "category", name: "Category" },
+
+  {
+    key: "stock",
+    name: "Stock",
+    type: "number",
+  },
+
+  {
+    key: "price",
+    name: "Price",
+  },
+
+  {
+    key: "description",
+    name: "Description",
+  },
+
+  {
+    key: "actions",
+    name: "Actions",
+    type: "number",
+    sortable: false,
+    formatter: (value) => {
+      return formatterActions(value.row.productId);
+    },
+  },
+];
 
 const ProductList = () => {
   const [isLoading, setLoading] = useState(true);
@@ -54,42 +91,6 @@ const ProductList = () => {
     );
   };
 
-  const columns = [
-    {
-      key: "name",
-      name: "Name",
-      formatter: (value) => {
-        return formatterName(value.row.name);
-      },
-    },
-    { key: "category", name: "Category" },
-
-    {
-      key: "stock",
-      name: "Stock",
-      type: "number",
-    },
-
-    {
-      key: "price",
-      name: "Price",
-    },
-
-    {
-      key: "description",
-      name: "Description",
-    },
-
-    {
-      key: "actions",
-      name: "Actions",
-      type: "number",
-      sortable: false,
-      formatter: (value) => {
-        return formatterActions(value.row.productId);
-      },
-    },
-  ];
   const rows = [];
 
   productsAdmin &&

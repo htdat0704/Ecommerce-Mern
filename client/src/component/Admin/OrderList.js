@@ -10,6 +10,12 @@ import DeleteIcon from "../../assets/trash-fill.svg";
 
 import LoadingModel from "../Loading/loading";
 
+const BG_DICT = {
+  Done: 'success',
+  Shipping: 'warning',
+  Processing: 'primary'
+};
+
 const ProductList = () => {
   const [isLoading, setLoading] = useState(true);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -28,17 +34,11 @@ const ProductList = () => {
   };
 
   const formatterStatus = (value) => {
+    const bg = BG_DICT[value] || 'danger';
+
     return (
       <Badge
-        bg={
-          value === "Done"
-            ? "success"
-            : value === "Shipping"
-            ? "warning"
-            : value === "Processing"
-            ? "primary"
-            : "danger"
-        }
+        bg={bg}
       >
         {value}
       </Badge>
